@@ -48,6 +48,7 @@ const handleReaction = (reaction, user, adding) => {
 };
 
 module.exports = async (client) => {
+    console.log("Setting up feature: Reaction Roles");
     client.on("messageReactionAdd", (reaction, user) => {
         handleReaction(reaction, user, true);
     });
@@ -97,6 +98,8 @@ module.exports = async (client) => {
             return;
         }
     }
+
+    console.log("Completed setup for feature: Groups");
 };
 
 module.exports.fetchCache = fetchCache;

@@ -2,6 +2,8 @@ const DiscordJS = require("discord.js");
 const WOKCommands = require("wokcommands");
 require("dotenv").config();
 
+const permissions = require("./constants/permissions");
+
 const guildId = "302690115505881089"; // USED FOR DEVELOPMENT
 const client = new DiscordJS.Client();
 
@@ -24,6 +26,12 @@ client.on("ready", async () => {
     process.on("unhandledRejection", e => {
         console.error("Unhandled promise rejection:", e);
     })
+
+    client.on("message", (message) => {
+        if (message.author.bot && message.content === "\u200b" && message.guild.me.hasPermission(permissions.MANAGE_MESSAGES)) {
+            message.delete();
+        }
+    });
 
     // const slashCommands = await getApp(guildId).commands.get();
     // console.log(slashCommands);

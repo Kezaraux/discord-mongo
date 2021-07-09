@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 
-const { addToCache } = require("../features/group");
+const { addToCache } = require("../features/group/cache");
 const groupSchema = require("../models/group");
 const groupStatus = require("../constants/groupStatus");
 
