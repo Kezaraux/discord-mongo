@@ -1,10 +1,10 @@
-const { fetchCache, addToCache } = require("../features/rr");
+const { fetchMessageCache, addToCache } = require("../features/reactionroles/cache");
 const permissions = require("../constants/permissions");
 const messageSchema = require("../models/message");
 
 module.exports = {
-    minArgs: 3,
-    expectedArgs: "<Emoji> <Role name, tag, or id> <Role display name>",
+    minArgs: 4,
+    expectedArgs: "<Message ID> <Emoji> <Role name, tag, or id> <Role display name>",
     requiredPermission: [permissions.ADMINISTRATOR],
     callback: async ({ message, args }) => {
         const { guild } = message;
@@ -14,9 +14,10 @@ module.exports = {
             return;
         }
 
+        const msgId = args.shift();
         let emoji = args.shift();
         let role = args.shift();
-        const displayName = args.join(" ");
+        const descriptorText = args.join(" ");
 
         if (role.startsWith("<@&")) {
             role = role.substring(3, role.length - 1);
@@ -35,14 +36,14 @@ module.exports = {
             emoji = guild.emojis.cache.find(e => e.name === emojiName);
         }
 
-        const [fetchedMessage] = fetchCache(guild.id);
+        const [fetchedMessage] = fetchMessageCache(guild.id, msgId);
 
         if (!fetchedMessage) {
             message.reply("An error occurred, please try again.");
             return;
         }
 
-        const newLine = `${emoji} ${displayName}`;
+        const newLine = `${emoji} ${descriptorText}`;
         let { content } = fetchedMessage;
 
         if (content.includes(emoji)) {

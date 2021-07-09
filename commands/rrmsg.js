@@ -1,6 +1,6 @@
 const messageSchema = require("../models/message");
 const permissions = require("../constants/permissions");
-const { addToCache } = require("../features/rr");
+const { addToCache } = require("../features/reactionroles/cache");
 
 module.exports = {
     minArgs: 1,

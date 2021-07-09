@@ -14,7 +14,7 @@ const handleAddReaction = async (reaction, user) => {
 
     const [fetchedMessage, title, size, members] = fetchMessageCache(guild.id, message.id);
     if (!fetchedMessage) {
-        console.log("Unable to retrieve message from cache");
+        console.log("Unable to retrieve message from group cache");
         return;
     }
 

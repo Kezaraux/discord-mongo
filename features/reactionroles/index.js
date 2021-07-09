@@ -1,51 +1,6 @@
-const messageSchema = require("../models/message");
-const permissions = require("../constants/permissions");
-
-const cache = {}; // { guildId: [message, { Emoji: RoleID, ... }] }
-
-const fetchCache = (guildId) => cache[guildId] || [];
-
-const addToCache = async (guildId, message, emoji, roleId) => {
-    const array = cache[guildId] || [message, {}];
-
-    if (emoji && roleId) {
-        array[1][emoji] = roleId
-    }
-
-    await message.channel.messages.fetch(message.id, true, true);
-
-    cache[guildId] = array;
-};
-
-const handleReaction = (reaction, user, adding) => {
-    const { message } = reaction;
-    const { guild } = message;
-
-    const [fetchedMessage, roles] = fetchCache(guild.id);
-    if (!fetchedMessage) {
-        return;
-    }
-
-    if (fetchedMessage.id === message.id && guild.me.hasPermission(permissions.MANAGE_ROLES)) {
-        const toCompare = reaction.emoji.id || reaction.emoji.name;
-
-        for (const key of Object.keys(roles)) {
-            if (key === toCompare) {
-                const role = guild.roles.cache.get(roles[key]);
-                if (role) {
-                    const member = guild.member.cache.get(user.id);
-
-                    if (adding) {
-                        member.roles.add(role);
-                    } else {
-                        member.roles.remove(role);
-                    }
-                }
-                return;
-            }
-        }
-    }
-};
+const messageSchema = require("../../models/message");
+const { handleReaction } = require("./handleReaction");
+const { setMessageCache } = require("./cache");
 
 module.exports = async (client) => {
     console.log("Setting up feature: Reaction Roles");
@@ -90,7 +45,7 @@ module.exports = async (client) => {
                     newRoles[emoji] = roleId;
                 }
 
-                cache[guildId] = [fetchedMessage, newRoles];
+                setMessageCache(guildId, messageId, [fetchedMessage, newRoles]);
             }
         } catch (e) {
             console.log(`Removing message ID "${messageId}" from the database.`);
@@ -99,8 +54,5 @@ module.exports = async (client) => {
         }
     }
 
-    console.log("Completed setup for feature: Groups");
+    console.log("Completed setup for feature: Reaction Roles");
 };
-
-module.exports.fetchCache = fetchCache;
-module.exports.addToCache = addToCache;
