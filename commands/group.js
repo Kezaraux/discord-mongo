@@ -11,7 +11,6 @@ module.exports = {
     minArgs: 2,
     expectedArgs: "<group name> <number needed> [channel]",
     callback: async ({ channel, args }) => {
-        console.log("Running group command!");
         const [name, num, specifiedChannel] = args;
         const { guild } = channel;
 
@@ -21,8 +20,6 @@ module.exports = {
         }
 
         const targetChannel = fetchedChannel || channel;
-
-        console.log("Got my target channel, constructing message");
 
         const embed = new MessageEmbed();
         embed.setTitle(name);
@@ -34,8 +31,6 @@ module.exports = {
         const newMessage = await targetChannel.send(embed);
         newMessage.react("👍");
         newMessage.react("❓");
-
-        console.log("Sent the message, added reactions. Adding to cache and DB");
 
         await addToCache(guild.id, newMessage, name, num);
 
@@ -54,8 +49,6 @@ module.exports = {
             });
         });
 
-        console.log("Done running group command");
-        // console.log(newMessage);
         return "\u200b";
     }
 }

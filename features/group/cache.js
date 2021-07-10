@@ -33,6 +33,19 @@ const addToCache = async (guildId, message, title, size, userId, status, member)
     cache[guildId] = { ...cache[guildId], [message.id]: array };
 };
 
+const removeMessageFromCache = (guildId, messageId) => {
+    const cache = fetchGuildCache(guildId);
+
+    const newCache = Object.keys(cache).reduce((acc, val) => {
+        if (val !== messageId) {
+            acc[val] = cache[val];
+        }
+        return acc;
+    }, {});
+
+    cache[guildId] = newCache;
+}
+
 const removeMemberFromCache = (guildId, messageId, userId) => {
     // Assumes that messageId is already present, issues if not
     const array = cache[guildId][messageId];
@@ -55,5 +68,6 @@ module.exports = {
     setMessageCache,
     addToCache,
     removeMemberFromCache,
+    removeMessageFromCache,
     logCache
 };
