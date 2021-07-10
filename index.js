@@ -21,7 +21,24 @@ client.on("ready", async () => {
         featureDir: "features",
         showWarns: false,
         testServers: [guildId]
-    }).setMongoPath(process.env.MONGO_URI);
+    })
+        .setMongoPath(process.env.MONGO_URI)
+        .setDisplayName("Group Utility")
+        .setCategorySettings([
+            {
+                name: "Groups",
+                emoji: "🤼"
+            },
+            {
+                name: "Utility",
+                emoji: "📰"
+            },
+            {
+                name: "Development",
+                emoji: "🚧",
+                hidden: true
+            }
+        ]);
 
     process.on("unhandledRejection", e => {
         console.error("Unhandled promise rejection:", e);
@@ -109,6 +126,7 @@ client.on("ready", async () => {
     //     return { ...data, files };
     // }
 
+    client.user.setActivity("!help for commands");
     console.log("Bot is logged in and ready");
 });
 

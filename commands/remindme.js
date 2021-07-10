@@ -7,7 +7,8 @@ const { findClosestStringInList } = require("../helpers/strings");
 module.exports = {
     slash: false,
     testOnly: true, // Can only be registered in test guilds
-    description: "Set yourself a reminder.",
+    category: "Utility",
+    description: "Set a reminder for yourself. After providing the time information it will prompt you for the reminder message.",
     minArgs: 4,
     maxArgs: 5,
     expectedArgs: "<YYYY/MM/DD> <HH:mm> <'AM' or 'PM'> <Timezone> [Channel tag]",

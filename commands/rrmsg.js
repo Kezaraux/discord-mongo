@@ -5,6 +5,8 @@ const { addToCache } = require("../features/reactionroles/cache");
 module.exports = {
     minArgs: 1,
     expectedArgs: "[Channel tag] <Message text>",
+    category: "Utility",
+    description: "Create a Reaction Role message in the current channel, or a specified one.",
     requiredPermissions: [permissions.ADMINISTRATOR],
     callback: async ({ message, args }) => {
         const { guild, mentions } = message;

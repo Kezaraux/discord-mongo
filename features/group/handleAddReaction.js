@@ -5,7 +5,7 @@ const groupStatus = require("../../constants/groupStatus");
 
 const handleAddReaction = async (reaction, user) => {
     if (user.bot) {
-        console.log("Reaction added by a bot, stop handling");
+        // console.log("Reaction added by a bot, stop handling");
         return;
     }
 
@@ -14,7 +14,7 @@ const handleAddReaction = async (reaction, user) => {
 
     const [fetchedMessage, title, size, members] = fetchMessageCache(guild.id, message.id);
     if (!fetchedMessage) {
-        console.log("Unable to retrieve message from group cache");
+        // console.log("Unable to retrieve message from group cache");
         return;
     }
 

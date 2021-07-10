@@ -2,12 +2,17 @@ const permissions = require("../../constants/permissions");
 const { fetchMessageCache } = require("./cache");
 
 const handleReaction = (reaction, user, adding) => {
+    if (user.bot) {
+        // console.log("Reaction added by a bot, stop handling");
+        return;
+    }
+
     const { message } = reaction;
     const { guild } = message;
 
     const [fetchedMessage, roles] = fetchMessageCache(guild.id, message.id);
     if (!fetchedMessage) {
-        console.log("Unable to retrieve message from reaction roles cache");
+        // console.log("Unable to retrieve message from reaction roles cache");
         return;
     }
 

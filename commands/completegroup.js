@@ -4,6 +4,7 @@ const groupSchema = require("../models/group");
 module.exports = {
     slash: true,
     testOnly: true, // Can only be registered in test guilds
+    category: "Groups",
     description: "Used to remove an existing group via a command. Channel specific.",
     minArgs: 1,
     maxArgs: 2,

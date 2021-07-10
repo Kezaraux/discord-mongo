@@ -3,7 +3,10 @@ const permissions = require("../constants/permissions");
 const messageSchema = require("../models/message");
 
 module.exports = {
+    slash: false,
     minArgs: 4,
+    category: "Utility",
+    description: "Add an emoji tied a role to an existing Reaction Role message.",
     expectedArgs: "<Message ID> <Emoji> <Role name, tag, or id> <Role display name>",
     requiredPermission: [permissions.ADMINISTRATOR],
     callback: async ({ message, args }) => {

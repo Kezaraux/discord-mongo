@@ -7,7 +7,8 @@ const groupStatus = require("../constants/groupStatus");
 module.exports = {
     slash: true,
     testOnly: true, // Can only be registered in test guilds
-    description: "A command for forming groups",
+    category: "Groups",
+    description: "A command for forming groups.",
     minArgs: 2,
     expectedArgs: "<group name> <number needed> [channel]",
     callback: async ({ channel, args }) => {
