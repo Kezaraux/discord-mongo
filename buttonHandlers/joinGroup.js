@@ -4,6 +4,7 @@ const store = require("../redux/store");
 const { constructGroupEmbed, constructGroupButtons } = require("../helpers/messageComponents");
 const groupSchema = require("../models/group");
 const groupStatus = require("../constants/groupStatus");
+const { countStatusInGroup } = require("../helpers/groups");
 
 module.exports = {
 	name: buttonCustomIds.JOIN_GROUP,
@@ -13,18 +14,19 @@ module.exports = {
 
 		const group = groupsSelector.selectById(store.getState(), message.id);
 
-		if (Object.keys(group.members).includes(member.id)) {
+		if (
+			Object.keys(group.members).includes(member.id) &&
+			(group.members[member.id].status === groupStatus.CONFIRMED ||
+				group.members[member.id].status === groupStatus.WAITING)
+		) {
+			console.log(group);
+			console.log(group.members);
 			logger.info(`Member with id ${member.id} tried to join a group they're already in.`);
 			interaction.reply({ content: "You're already in this group!", ephemeral: true });
 			return;
 		}
 
-		let confirmedCount = 0;
-		for (const member in group.members) {
-			if (group.members[member].status === groupStatus.CONFIRMED) {
-				confirmedCount++;
-			}
-		}
+		const confirmedCount = countStatusInGroup(group, groupStatus.CONFIRMED);
 
 		let statusToAdd;
 		if (confirmedCount === group.size) {

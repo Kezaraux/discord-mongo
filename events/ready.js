@@ -1,5 +1,6 @@
 const utility = require("../helpers/utility");
 const fs = require("fs");
+const { TESTING } = require("../config.json");
 
 module.exports = {
 	name: "ready",
@@ -16,15 +17,20 @@ module.exports = {
 				const command = require(`../commands/${folder}/${file}`);
 				client.commands.set(command.name, command);
 
+				const data = {
+					name: command.name,
+					description: command.description,
+					options: command.options
+				};
+
+				if (!TESTING && command.global) {
+					logger.info(`Registering ${command.name} for global use.`);
+					await client.application?.commands.create(data);
+				}
+
 				for (const server of client.testServers) {
 					const app = utility.getApp(client, server);
-					await app.commands.post({
-						data: {
-							name: command.name,
-							description: command.description,
-							options: command.options
-						}
-					});
+					await app.commands.post({ data });
 				}
 			}
 		}

@@ -39,9 +39,9 @@ const groupsSlice = createSlice({
 			const { id, member } = action.payload;
 			const group = state.entities[id];
 			if (group) {
-				if (!Object.keys(group.members).includes(member.id)) {
-					group.members[member.id] = { displayName: member.displayName, status: member.status };
-				}
+				// if (!Object.keys(group.members).includes(member.id)) {
+				group.members[member.id] = { displayName: member.displayName, status: member.status };
+				// }
 			}
 		},
 		groupMemberRemoved: (state, action) => {

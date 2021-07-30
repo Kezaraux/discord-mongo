@@ -3,7 +3,6 @@ const permissions = require("../constants/permissions");
 const { groupsSelector, groupRemoved } = require("../redux/groupsSlice.js");
 const store = require("../redux/store");
 const groupSchema = require("../models/group");
-const groupStatus = require("../constants/groupStatus");
 
 module.exports = {
 	name: buttonCustomIds.REMOVE_GROUP,
@@ -11,16 +10,13 @@ module.exports = {
 		const { message, member } = interaction;
 		const group = groupsSelector.selectById(store.getState(), message.id);
 
-		let confirmedCount = 0;
-		for (const member in group.members) {
-			if (group.members[member].status === groupStatus.CONFIRMED) {
-				confirmedCount++;
-			}
-		}
-
-		if (member.displayName === group.creatorDisplayName || confirmedCount === group.size) {
+		if (
+			member.displayName === group.creatorDisplayName ||
+			member.permissionsIn(message.channel).has(permissions.MANAGE_MESSAGES)
+		) {
 			const bot = await interaction.guild.members.fetch(client.user.id);
-			if (bot.permissions.has(permissions.MANAGE_MESSAGES)) {
+			const botHasPermission = bot.permissionsIn(message.channel).has(permissions.MANAGE_MESSAGES);
+			if (botHasPermission) {
 				logger.info(`Deleting message with id ${message.id}`);
 
 				store.dispatch(groupRemoved({ id: message.id }));
@@ -40,7 +36,7 @@ module.exports = {
 		} else {
 			interaction.reply({
 				content:
-					"The group can only be removed if: the group creator requests it, or if the group is full.",
+					"The group can only be removed if: the group creator requests it, or you have permission to manage messages in this channel.",
 				ephemeral: true
 			});
 			return;

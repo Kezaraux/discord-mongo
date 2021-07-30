@@ -1,9 +1,5 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
-
 const groupSchema = require("../../models/group");
-const groupStatus = require("../../constants/groupStatus");
 const optionTypes = require("../../constants/commandOptionTypes");
-const buttonCustomIds = require("../../constants/buttonCustomIds");
 const store = require("../../redux/store");
 const { groupAdded } = require("../../redux/groupsSlice");
 const { constructGroupEmbed, constructGroupButtons } = require("../../helpers/messageComponents");
@@ -11,6 +7,7 @@ const { constructGroupEmbed, constructGroupButtons } = require("../../helpers/me
 module.exports = {
 	name: "create-group",
 	description: "A command for forming groups.",
+	global: true,
 	options: [
 		{
 			name: "title",
@@ -48,38 +45,10 @@ module.exports = {
 		const targetChannel = fetchedChannel || interaction.channel;
 
 		const embed = constructGroupEmbed({}, title, size, when, member.displayName);
-		// const embed = new MessageEmbed();
-		// embed.setTitle(title);
-		// embed.setDescription(`Number of members needed: ${size}`);
-		// embed.addField("Time", when, false);
-		// embed.addField(`${groupStatus.CONFIRMED} (0/${size})`, "None", true);
-		// embed.addField(`${groupStatus.WAITING} (0)`, "None", true);
-		// embed.addField(`${groupStatus.UNKNOWN} (0)`, "None", true);
-		// embed.setFooter(`Group created by: ${member.displayName}`);
 		const components = constructGroupButtons();
-
-		// const row = new MessageActionRow().addComponents(
-		// 	new MessageButton()
-		// 		.setCustomId(buttonCustomIds.JOIN_GROUP)
-		// 		.setLabel("Join group")
-		// 		.setStyle("SUCCESS"),
-		// 	new MessageButton()
-		// 		.setCustomId(buttonCustomIds.SHOW_INTEREST)
-		// 		.setLabel("Unsure but interested")
-		// 		.setStyle("PRIMARY"),
-		// 	new MessageButton()
-		// 		.setCustomId(buttonCustomIds.LEAVE_GROUP)
-		// 		.setLabel("Leave group")
-		// 		.setStyle("SECONDARY"),
-		// 	new MessageButton()
-		// 		.setCustomId(buttonCustomIds.REMOVE_GROUP)
-		// 		.setLabel("Remove group")
-		// 		.setStyle("DANGER")
-		// );
 
 		const newMessage = await targetChannel.send({
 			embeds: [embed],
-			// components: [row]
 			components
 		});
 
